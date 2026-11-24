@@ -1,15 +1,323 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sciar Tips · staff view (starter)</title></head>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sciar Tips | Your weekly tips</title>
+<style>
+  :root {
+    color-scheme: light;
+    font-family: system-ui, sans-serif;
+    color: #152c28;
+    background: #f5f2eb;
+    line-height: 1.55;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  header { background: #fffdf8; border-bottom: 1px solid #d6ddd2; }
+  nav, main { max-width: 58rem; margin: auto; padding: 0 1.15rem; }
+  nav { display: flex; justify-content: space-between; gap: 1rem; padding-block: 0.85rem; }
+  main { padding-block: 1.5rem 3rem; }
+  a { color: #155c49; text-underline-offset: 0.2em; }
+  h1, h2, h3, p { margin: 0 0 0.65rem; }
+  h1 { font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.08; letter-spacing: -0.045em; }
+  h2 { font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.025em; }
+  h3 { font-size: 1rem; }
+  small, .muted { color: #4c635a; }
+  .intro { margin-bottom: 1.25rem; }
+  .card { margin-top: 1rem; background: #fffdf8; border: 1px solid #d6ddd2; border-radius: 1.1rem; padding: clamp(1rem, 4vw, 1.7rem); }
+  .payout { background: #163c32; color: #fffdf8; }
+  .payout small { color: #d2e7d8; }
+  .amount { font-size: clamp(2.8rem, 9vw, 5rem); line-height: 1; letter-spacing: -0.06em; font-weight: 750; margin: 0.4rem 0 1.1rem; }
+  .numbers { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 0.65rem; margin: 0.9rem 0; }
+  .numbers div { background: #eef1e8; border-radius: 0.7rem; padding: 0.7rem; }
+  dt { font-size: 0.875rem; }
+  dd { margin: 0; font-weight: 700; font-size: 1.25rem; }
+  .math { padding-left: 1.35rem; }
+  .math li + li { margin-top: 0.5rem; }
+  details { margin-top: 0.8rem; }
+  summary { cursor: pointer; }
+  label { font-weight: 650; display: block; margin-top: 0.7rem; }
+  input, textarea, select, button { font: inherit; min-height: 44px; border-radius: 0.55rem; }
+  input, textarea, select { color: #152c28; background: #fffdf8; border: 1px solid #748b7e; padding: 0.5rem; display: block; width: 100%; }
+  .payout select { max-width: 23rem; }
+  textarea { min-height: 5rem; resize: vertical; }
+  button { color: white; background: #155c49; border: 1px solid #155c49; padding: 0.5rem 0.85rem; margin-top: 0.75rem; font-weight: 650; cursor: pointer; }
+  button.secondary { color: #155c49; background: transparent; }
+  :focus-visible { outline: 3px solid #c36b23; outline-offset: 3px; }
+  .notice { background: #eef1e8; border-radius: 0.65rem; padding: 0.85rem; }
+  .credential, .message { overflow-wrap: anywhere; }
+  .message p:last-child { margin: 0; white-space: pre-wrap; }
+  #thread li { margin-bottom: 0.5rem; list-style: none; }
+  #thread { padding: 0; }
+  .inboxes { display: grid; gap: 1.25rem; }
+  @media (min-width: 42rem) { .inboxes { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
 <body>
-<h1>Sciar Tips</h1>
-<p id="check"></p>
-<!-- The pilot data, loaded as JavaScript so this page also works when opened straight from your disk. -->
+<header><nav aria-label="Site"><strong>Sciar Tips</strong><a href="index.html">Home</a></nav></header>
+<main>
+  <section class="intro" aria-labelledby="title">
+    <p class="muted">Halloran’s · Fictional pilot</p>
+    <h1 id="title">Your weekly tips</h1>
+    <p>Staff example for Rafael, kitchen porter</p>
+  </section>
+
+  <section class="card payout" aria-labelledby="payout-heading">
+    <h2 id="payout-heading">Your recorded payout</h2>
+    <p id="payout" class="amount" aria-live="polite"></p>
+    <label for="week">Pilot week</label>
+    <select id="week"></select>
+  </section>
+
+  <section class="card" aria-labelledby="hours-heading">
+    <h2 id="hours-heading">Which hours counted?</h2>
+    <dl class="numbers">
+      <div><dt>Total hours worked</dt><dd id="hours"></dd></div>
+      <div><dt>Hours after 11 p.m.</dt><dd id="late"></dd></div>
+      <div><dt>Hours that count</dt><dd id="eligible"></dd></div>
+    </dl>
+    <p>Under Halloran’s current rule, hours after 11 p.m. are still hours worked. They earn zero tip points.</p>
+    <p><small id="staff-source"></small></p>
+  </section>
+
+  <section class="card" aria-labelledby="calculation-heading">
+    <h2 id="calculation-heading">How your points become euros</h2>
+    <ol class="math">
+      <li id="points"></li>
+      <li id="share"></li>
+      <li id="calculated"></li>
+    </ol>
+    <p class="muted">The weekly pool is the card tips collected that week. It excludes service charges.</p>
+    <p><small id="team-source"></small></p>
+  </section>
+
+  <section class="card" aria-labelledby="concern-heading">
+    <h2 id="concern-heading">Raise a concern</h2>
+    <p class="notice"><strong>Simulation.</strong> Cases stay in this browser. No report goes to Sciar or Halloran’s. A sample reply demonstrates how Sciar’s product lead could ask a follow-up.</p>
+    <p>The report leaves out your name and staff ID. Use only the details needed to explain the issue. Leave out names and details that could identify you or a coworker.</p>
+    <div class="inboxes">
+      <form id="new-case">
+        <h3>Start a case</h3>
+        <label for="category">Issue</label>
+        <select id="category" required>
+          <option>Payout calculation</option>
+          <option>Hours that count toward tips</option>
+          <option>Other concern</option>
+        </select>
+        <label for="case-week">Week (optional)</label>
+        <select id="case-week"><option value="">Leave out the week</option></select>
+        <label for="concern">What happened?</label>
+        <textarea id="concern" maxlength="600" required></textarea>
+        <button>Save anonymous concern</button>
+      </form>
+
+      <form id="open-case">
+        <h3>Reopen your case</h3>
+        <label for="reference">Case reference</label>
+        <input id="reference" required autocapitalize="off" spellcheck="false">
+        <label for="code">Private access code</label>
+        <input id="code" type="password" required autocomplete="off">
+        <button>Open case</button>
+      </form>
+    </div>
+    <p id="case-status" role="status"></p>
+    <div id="receipt" class="notice" hidden>
+      <h3>Keep your case details</h3>
+      <p>Case reference <strong id="saved-reference" class="credential"></strong></p>
+      <p>Private access code <strong id="saved-code" class="credential"></strong></p>
+      <p>Keep both somewhere private to reopen this case on this browser.</p>
+      <button type="button" id="hide-receipt" class="secondary">Hide case details</button>
+    </div>
+
+    <div id="case-inbox" hidden>
+      <h3 id="case-title"></h3>
+      <p id="case-summary"></p>
+      <ul id="thread" aria-label="Case messages"></ul>
+      <form id="reply-form">
+        <label for="reply">Your reply</label>
+        <textarea id="reply" maxlength="600" required></textarea>
+        <button>Save reply</button>
+      </form>
+      <button type="button" id="close-case" class="secondary">Close case view</button>
+    </div>
+  </section>
+</main>
+
 <script src="data/payouts.js"></script>
-<script src="data/takings.js"></script>
 <script>
-  // PAYOUTS and TAKINGS are arrays of rows; every value is a string, as in the CSV. Replace this page with your build.
-  document.getElementById("check").textContent =
-    "Data loaded: " + PAYOUTS.length + " payout rows, " + TAKINGS.length + " takings rows.";
+  const byId = id => document.getElementById(id);
+  const money = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' });
+  const formatNumber = new Intl.NumberFormat('en-IE', { maximumFractionDigits: 3 });
+  const format = value => formatNumber.format(value);
+  const pilot = PAYOUTS.filter(row => row.staff_id === 'S12');
+  const storedKey = 'sciar-tips-demo-case:';
+  let opened = null;
+
+  for (const row of pilot) {
+    byId('week').add(new Option('Week ' + row.week + ' · ' + row.week_start, row.week));
+    byId('case-week').add(new Option('Week ' + row.week, row.week));
+  }
+
+  function renderPayout() {
+    const row = pilot.find(entry => entry.week === byId('week').value);
+    const team = PAYOUTS.filter(entry => entry.week === row.week);
+    const coworkers = new Set(team.filter(entry => entry.staff_id !== row.staff_id).map(entry => entry.staff_id));
+    const eligible = Number(row.hours) - Number(row.hours_after_2300);
+    const rawPoints = eligible * Number(row.points_per_hour);
+    const recordedPoints = Number(row.points);
+    const poolCents = Math.round(Number(row.week_pool_eur) * 100);
+    const teamPointUnits = team.reduce((total, entry) => total + Math.round(Number(entry.points) * 100), 0);
+    const payoutCents = Math.round(poolCents * Math.round(recordedPoints * 100) / teamPointUnits);
+
+    byId('payout').textContent = money.format(row.tip_payout_eur);
+    byId('hours').textContent = format(row.hours);
+    byId('late').textContent = format(row.hours_after_2300);
+    byId('eligible').textContent = format(eligible);
+    byId('staff-source').textContent = 'Source: payouts.csv · staff ID S12 · Week ' + row.week +
+      ' · 1 row. Hours that count = hours minus hours_after_2300.';
+    byId('points').textContent = format(eligible) + ' hours × ' + format(row.points_per_hour) +
+      ' points per hour = ' + format(rawPoints) + ' points before any rounding. The system records ' +
+      format(recordedPoints) + ' points and uses those for your payout.';
+    byId('share').hidden = coworkers.size < 3;
+    byId('calculated').hidden = coworkers.size < 3;
+    byId('team-source').hidden = coworkers.size < 3;
+    if (coworkers.size >= 3) {
+      const teamPoints = teamPointUnits / 100;
+      byId('share').textContent = 'Your ' + format(recordedPoints) + ' points ÷ ' + format(teamPoints) +
+        ' team points gives your share of this week’s pool.';
+      byId('calculated').textContent = 'Your share × ' + money.format(poolCents / 100) +
+        ' in card tips = ' + money.format(payoutCents / 100) + ', rounded to cents.';
+      byId('team-source').textContent = 'Source: payouts.csv · Week ' + row.week + ' · ' + team.length +
+        ' staff rows. Sum points across the week. Use week_pool_eur once because the same pool appears on each row.';
+    }
+  }
+
+  function randomHex(bytes) {
+    return Array.from(crypto.getRandomValues(new Uint8Array(bytes)),
+      byte => byte.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function hashCode(code) {
+    const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(code));
+    return Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, '0')).join('');
+  }
+
+  function status(message) {
+    byId('case-status').textContent = message;
+  }
+
+  function hideReceipt() {
+    byId('receipt').hidden = true;
+    byId('saved-code').textContent = '';
+    byId('saved-reference').textContent = '';
+  }
+
+  function showCase(record) {
+    opened = record;
+    byId('case-title').textContent = 'Case ' + record.reference;
+    byId('case-summary').textContent = record.category + (record.week ? ' · Week ' + record.week : '');
+    byId('thread').replaceChildren();
+    for (const message of record.messages) {
+      const item = document.createElement('li');
+      const author = document.createElement('strong');
+      const body = document.createElement('p');
+      item.className = 'notice message';
+      author.textContent = message.author;
+      body.textContent = message.body;
+      item.append(author, body);
+      byId('thread').append(item);
+    }
+    byId('case-inbox').hidden = false;
+  }
+
+  byId('week').addEventListener('change', renderPayout);
+  renderPayout();
+
+  byId('new-case').addEventListener('submit', async event => {
+    event.preventDefault();
+    const body = byId('concern').value.trim();
+    if (!body) {
+      status('Enter a short description of your concern.');
+      return;
+    }
+    const button = event.currentTarget.querySelector('button');
+    button.disabled = true;
+    try {
+      const reference = randomHex(6);
+      const code = randomHex(12);
+      const record = {
+        reference,
+        codeHash: await hashCode(code),
+        category: byId('category').value,
+        week: byId('case-week').value,
+        messages: [
+          { author: 'You', body },
+          { author: 'Sciar product lead · sample reply', body: 'Which part should I check: hours, points, or the payout amount? You can reply without sharing your name.' }
+        ]
+      };
+      localStorage.setItem(storedKey + reference, JSON.stringify(record));
+      byId('saved-reference').textContent = reference;
+      byId('saved-code').textContent = code;
+      byId('receipt').hidden = false;
+      byId('new-case').reset();
+      byId('reply-form').reset();
+      showCase(record);
+      status('Concern saved in this browser.');
+    } catch {
+      status('This browser could not save the demo case.');
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  byId('open-case').addEventListener('submit', async event => {
+    event.preventDefault();
+    const reference = byId('reference').value.trim().toLowerCase();
+    const code = byId('code').value.trim().toLowerCase();
+    try {
+      const record = JSON.parse(localStorage.getItem(storedKey + reference));
+      if (!record || record.codeHash !== await hashCode(code)) {
+        status('The case reference or access code did not match in this browser.');
+        return;
+      }
+      byId('reply-form').reset();
+      showCase(record);
+      byId('code').value = '';
+      status('Case reopened.');
+    } catch {
+      status('This browser could not open the demo case.');
+    }
+  });
+
+  byId('reply-form').addEventListener('submit', event => {
+    event.preventDefault();
+    const body = byId('reply').value.trim();
+    if (!body || !opened) {
+      status('Enter a short reply before saving.');
+      return;
+    }
+    const record = { ...opened, messages: [...opened.messages, { author: 'You', body }] };
+    try {
+      localStorage.setItem(storedKey + record.reference, JSON.stringify(record));
+      showCase(record);
+      byId('reply-form').reset();
+      status('Reply saved in this browser.');
+    } catch {
+      status('This browser could not save the reply.');
+    }
+  });
+
+  byId('hide-receipt').addEventListener('click', hideReceipt);
+  byId('close-case').addEventListener('click', () => {
+    opened = null;
+    hideReceipt();
+    byId('thread').replaceChildren();
+    byId('reply-form').reset();
+    byId('case-inbox').hidden = true;
+    byId('reference').focus();
+    status('Case view closed.');
+  });
 </script>
-</body></html>
+</body>
+</html>
