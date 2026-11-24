@@ -3,13 +3,76 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sciar Tips</title>
+  <title>Sciar Tips | For restaurant owners</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #152c28;
+      background: #f5f2eb;
+      line-height: 1.55;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .shell { width: min(72rem, calc(100% - 2rem)); margin-inline: auto; }
+    header { border-bottom: 1px solid #d6ddd2; }
+    .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.35rem 1rem; padding-block: 1rem; }
+    .header strong { letter-spacing: -0.025em; }
+    .header span, footer { color: #465e55; font-size: 0.875rem; }
+    main { padding-block: clamp(1rem, 5vw, 4rem) 1rem; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr); overflow: hidden; border-radius: 1.5rem; background: #173d33; color: #fffdf8; }
+    .intro { padding: clamp(1.4rem, 6vw, 4.75rem); align-self: center; }
+    .intro p { margin: 0 0 0.8rem; color: #d9eadb; font-size: 0.95rem; font-weight: 600; }
+    h1 { margin: 0 0 1.6rem; font-family: Georgia, serif; font-size: clamp(3rem, 10vw, 7rem); font-weight: 400; line-height: 0.97; letter-spacing: -0.065em; }
+    h2, h3, dd { margin: 0; }
+    .action { display: inline-flex; align-items: center; gap: 1rem; min-height: 48px; padding: 0.7rem 1.1rem; color: #173d33; background: #e2edbb; border-radius: 0.55rem; font-weight: 700; text-decoration: none; }
+    .action:hover { background: #f0f5d8; }
+    a:focus-visible { outline: 3px solid #ffc884; outline-offset: 4px; }
+    .preview { background: #fffdf8; color: #152c28; padding: clamp(1.4rem, 5vw, 3.5rem); }
+    h2 { font-size: clamp(1.4rem, 3vw, 2.1rem); line-height: 1.15; letter-spacing: -0.04em; margin-bottom: 1rem; }
+    dl { margin: 0; }
+    dl div { padding-block: 0.85rem; border-top: 1px solid #d6ddd2; }
+    dt { font-weight: 750; }
+    dd { margin-top: 0.15rem; color: #465e55; }
+    footer { padding-block: 0.65rem 2rem; }
+    @media (min-width: 48rem) {
+      .hero { grid-template-columns: 1.1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <main>
-    <h1>Sciar Tips</h1>
-    <p>Fictional teaching prototype for restaurant owners.</p>
-    <a href="app.html">Open the staff view</a>
+  <header>
+    <div class="shell header">
+      <strong>Sciar Tips</strong>
+      <span>Fictional teaching prototype</span>
+    </div>
+  </header>
+  <main class="shell">
+    <div class="hero">
+      <section class="intro" aria-labelledby="title">
+        <p>For restaurant owners</p>
+        <h1 id="title">Sciar Tips</h1>
+        <a class="action" href="app.html">Open the staff demo <span aria-hidden="true">→</span></a>
+      </section>
+      <section class="preview" aria-labelledby="preview-heading">
+        <h2 id="preview-heading">Inside the staff demo</h2>
+        <dl>
+          <div>
+            <dt>Hours that count</dt>
+            <dd>See which of the example staff member’s hours count toward tips.</dd>
+          </div>
+          <div>
+            <dt>Weekly payout</dt>
+            <dd>Follow the calculation from tip points to the amount paid.</dd>
+          </div>
+          <div>
+            <dt>Concerns</dt>
+            <dd>Try saving and reopening a concern in a browser-only simulation.</dd>
+          </div>
+        </dl>
+      </section>
+    </div>
   </main>
+  <footer class="shell">Based on the fictional Halloran’s pilot case.</footer>
 </body>
 </html>
